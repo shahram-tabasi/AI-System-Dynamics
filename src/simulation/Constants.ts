@@ -16,6 +16,12 @@ export const SimulationConstants={
 
     HiringCost:10000,
 
-    TrainingCost:3000
+    TrainingCost:3000,
+
+    ProgressFactor:0.08,
+
+    MotivationWeight:0.45,
+
+    SkillWeight:0.55,
 
 }
