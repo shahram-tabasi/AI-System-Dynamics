@@ -1,5 +1,7 @@
-const engine = new SimulationEngine(SimulationFactory.createInitialState());
+import Dashboard from "./components/Dashboard";
 
-engine.run(10, DummyAI.decide);
+function App() {
+  return <Dashboard />;
+}
 
-console.log(engine.getHistory());
+export default App;
