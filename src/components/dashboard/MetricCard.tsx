@@ -1,22 +1,19 @@
 import { Card, CardContent, Typography } from "@mui/material";
 
-type Props = {
+interface MetricCardProps {
   title: string;
-
   value: number;
-};
+}
 
-export default function MetricCard({
-  title,
-
-  value,
-}: Props) {
+export default function MetricCard({ title, value }: MetricCardProps) {
   return (
-    <Card elevation={4}>
+    <Card elevation={3}>
       <CardContent>
-        <Typography color="text.secondary">{title}</Typography>
+        <Typography variant="body2" color="text.secondary">
+          {title}
+        </Typography>
 
-        <Typography variant="h4" sx={{ mt: 2 }}>
+        <Typography variant="h4" sx={{ mt: 2, fontWeight: "bold" }}>
           {value.toFixed(1)}
         </Typography>
       </CardContent>
