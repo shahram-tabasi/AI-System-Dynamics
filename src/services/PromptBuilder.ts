@@ -1,3 +1,5 @@
+// src/services/PromptBuilder.ts
+
 import { SimulationState } from "../models/SimulationState";
 
 export class PromptBuilder {
@@ -5,9 +7,9 @@ export class PromptBuilder {
     static build(state: SimulationState): string {
 
         return `
-You are an experienced project manager.
+You are managing a software engineering company.
 
-Current project state:
+Current State
 
 Week: ${state.week}
 
@@ -15,31 +17,26 @@ Motivation: ${state.motivation}
 
 Skill: ${state.skill}
 
+Productivity: ${state.productivity}
+
+Progress: ${state.progress}
+
+Customer Satisfaction: ${state.customerSatisfaction}
+
 Burnout: ${state.burnout}
 
 Budget: ${state.budget}
 
 Employees: ${state.employees}
 
-Progress: ${state.progress}
+Your goal
 
-Customer Satisfaction: ${state.customerSatisfaction}
-
-Rules:
+- maximize productivity
+- maximize customer satisfaction
+- minimize burnout
+- keep budget positive
 
 Return ONLY JSON.
-
-Schema:
-
-{
-"motivationDelta":number,
-"training":boolean,
-"hire":boolean,
-"overtime":boolean,
-"budgetDelta":number,
-"comment":string,
-"confidence":number
-}
 `;
 
     }

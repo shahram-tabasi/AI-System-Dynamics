@@ -1,57 +1,91 @@
+// src/services/OpenAIService.ts
+
 import OpenAI from "openai";
 import { z } from "zod";
 import { SimulationState } from "../models/SimulationState";
 import { PromptBuilder } from "./PromptBuilder";
 import { AIResponse } from "../models/AIResponse";
 
-const client = new OpenAI({
+let client: OpenAI | null = null;
 
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+function getClient(): OpenAI {
+  if (!client) {
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
-    dangerouslyAllowBrowser: true
+    if (!apiKey) {
+      throw new Error(
+        "VITE_OPENAI_API_KEY is missing. Create a .env file."
+      );
+    }
 
-});
+    client = new OpenAI({
+      apiKey,
+      dangerouslyAllowBrowser: true,
+    });
+  }
 
-const ResponseSchema = z.object({
+  return client;
+}
 
-    motivationDelta: z.number(),
-
-    training: z.boolean(),
-
-    hire: z.boolean(),
-
-    overtime: z.boolean(),
-
-    budgetDelta: z.number(),
-
-    comment: z.string(),
-
-    confidence: z.number()
-
+const schema = z.object({
+  motivationDelta: z.number(),
+  training: z.boolean(),
+  hire: z.boolean(),
+  overtime: z.boolean(),
+  budgetDelta: z.number(),
+  comment: z.string(),
+  confidence: z.number().min(0).max(100),
 });
 
 export class OpenAIService {
+  static async decide(
+    state: SimulationState
+  ): Promise<AIResponse> {
+    const response = await getClient().responses.parse({
+      model: "gpt-4.1-mini",
 
-    static async decide(
+      input: [
+        {
+          role: "system",
+          content:
+            "You are a senior software project manager. Return ONLY valid JSON.",
+        },
+        {
+          role: "user",
+          content: PromptBuilder.build(state),
+        },
+      ],
 
-        state: SimulationState
+      text: {
+        format: {
+          type: "json_schema",
+          name: "manager_decision",
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              motivationDelta: { type: "number" },
+              training: { type: "boolean" },
+              hire: { type: "boolean" },
+              overtime: { type: "boolean" },
+              budgetDelta: { type: "number" },
+              comment: { type: "string" },
+              confidence: { type: "number" },
+            },
+            required: [
+              "motivationDelta",
+              "training",
+              "hire",
+              "overtime",
+              "budgetDelta",
+              "comment",
+              "confidence",
+            ],
+          },
+        },
+      },
+    });
 
-    ): Promise<AIResponse> {
-
-        const response = await client.responses.create({
-
-            model: "gpt-4.1-mini",
-
-            temperature: 0.3,
-
-            input: PromptBuilder.build(state)
-
-        });
-
-        const text = response.output_text;
-
-        return ResponseSchema.parse(JSON.parse(text));
-
-    }
-
+    return schema.parse(response.output_parsed);
+  }
 }
