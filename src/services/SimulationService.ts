@@ -1,6 +1,7 @@
 import { SimulationEngine } from "../simulation/SimulationEngine";
 import { SimulationFactory } from "../simulation/SimulationFactory";
 import { DummyAI } from "../simulation/DummyAI";
+import { OpenAIService } from "./OpenAIService";
 
 export class SimulationService {
 
@@ -39,17 +40,15 @@ reset() {
 }
 
 
-nextWeek() {
+async nextWeek() {
 
-    return this.engine.step(
+    const ai = await OpenAIService.decide(
 
-        DummyAI.decide(
-
-            this.engine.getState()
-
-        )
+        this.engine.getState()
 
     );
+
+    return this.engine.step(ai);
 
 }
 

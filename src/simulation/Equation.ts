@@ -15,6 +15,7 @@ export class Equation {
     return Math.min(skill, SimulationConstants.MaxSkill);
 }
 
+
 static calculateMotivation(
     currentMotivation:number,
     delta:number,
@@ -83,6 +84,7 @@ static calculateBurnout(
 
 }
 
+
 static calculateProgress(
 
     current:number,
@@ -100,6 +102,7 @@ static calculateProgress(
     );
 
 }
+
 
 static calculateCustomerSatisfaction(
 

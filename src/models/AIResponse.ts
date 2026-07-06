@@ -1,15 +1,17 @@
-export interface AIResponse{
+export interface AIResponse {
 
-    motivationDelta:number;
+    motivationDelta: number;
 
-    training:boolean;
+    training: boolean;
 
-    hire:boolean;
+    hire: boolean;
 
-    overtime:boolean;
+    overtime: boolean;
 
-    budgetDelta:number;
+    budgetDelta: number;
 
-    comment:string;
+    comment: string;
+
+    confidence: number;
 
 }

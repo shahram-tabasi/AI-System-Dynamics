@@ -1,14 +1,14 @@
 import { useState } from "react";
 import MetricCard from "./MetricCard";
-import { useSimulation } from "../hooks/useSimulation";
+import { useSimulation } from "../../hooks/useSimulation";
 
 export default function Dashboard() {
   const simulation = useSimulation();
 
   const [state, setState] = useState(simulation.getState());
 
-  const handleNextWeek = () => {
-    const newState = simulation.nextWeek();
+  const handleNextWeek = async () => {
+    const newState = await simulation.nextWeek();
 
     setState(newState);
   };
